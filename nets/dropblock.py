@@ -28,6 +28,7 @@ class DropBlock2D(tf.keras.layers.Layer):
         self.set_keep_prob()
         super(DropBlock2D, self).build(input_shape)
 
+    @tf.function
     def call(self, inputs, training=None, **kwargs):
         def drop():
             mask = self._create_mask(tf.shape(inputs))
@@ -84,6 +85,7 @@ class DropBlock3D(tf.keras.layers.Layer):
         self.set_keep_prob()
         super(DropBlock3D, self).build(input_shape)
 
+    @tf.function
     def call(self, inputs, training=None, **kwargs):
         def drop():
             mask = self._create_mask(tf.shape(inputs))
