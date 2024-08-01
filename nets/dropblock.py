@@ -5,7 +5,7 @@ from tensorflow.python.keras import backend as K
 
 
 def _bernoulli(shape, mean):
-    return tf.nn.relu(tf.sign(mean - tf.random_uniform(shape, minval=0, maxval=1, dtype=tf.float32)))
+    return tf.nn.relu(tf.sign(mean - tf.random.uniform(shape, minval=0, maxval=1, dtype=tf.float32)))
 
 
 class DropBlock2D(tf.keras.layers.Layer):
@@ -33,7 +33,7 @@ class DropBlock2D(tf.keras.layers.Layer):
             mask = self._create_mask(tf.shape(inputs))
             output = inputs * mask
             output = tf.cond(self.scale,
-                             true_fn=lambda: output * tf.to_float(tf.size(mask)) / tf.reduce_sum(mask),
+                             true_fn=lambda: output * tf.cast(tf.size(mask), tf.float32) / tf.reduce_sum(mask),
                              false_fn=lambda: output)
             return output
 
@@ -48,7 +48,7 @@ class DropBlock2D(tf.keras.layers.Layer):
         """This method only supports Eager Execution"""
         if keep_prob is not None:
             self.keep_prob = keep_prob
-        w, h = tf.to_float(self.w), tf.to_float(self.h)
+        w, h = tf.cast(self.w, tf.float32), tf.cast(self.h, tf.float32)
         self.gamma = (1. - self.keep_prob) * (w * h) / (self.block_size ** 2) / \
                      ((w - self.block_size + 1) * (h - self.block_size + 1))
 
@@ -89,7 +89,7 @@ class DropBlock3D(tf.keras.layers.Layer):
             mask = self._create_mask(tf.shape(inputs))
             output = inputs * mask
             output = tf.cond(self.scale,
-                             true_fn=lambda: output * tf.to_float(tf.size(mask)) / tf.reduce_sum(mask),
+                             true_fn=lambda: output * tf.cast(tf.size(mask), tf.float32) / tf.reduce_sum(mask),
                              false_fn=lambda: output)
             return output
 
@@ -104,7 +104,7 @@ class DropBlock3D(tf.keras.layers.Layer):
         """This method only supports Eager Execution"""
         if keep_prob is not None:
             self.keep_prob = keep_prob
-        d, w, h = tf.to_float(self.d), tf.to_float(self.w), tf.to_float(self.h)
+        d, w, h = tf.cast(self.d, tf.float32), tf.cast(self.w, tf.float32), tf.cast(self.h, tf.float32)
         self.gamma = ((1. - self.keep_prob) * (d * w * h) / (self.block_size ** 3) /
                       ((d - self.block_size + 1) * (w - self.block_size + 1) * (h - self.block_size + 1)))
 

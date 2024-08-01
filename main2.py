@@ -1,8 +1,6 @@
 import tensorflow as tf
 from nets.dropblock import DropBlock3D
 
-tf.enable_eager_execution()
-
 # only support `channels_last` data format
 a = tf.ones([[1, 5, 5, 5, 1]])
 
